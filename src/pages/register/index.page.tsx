@@ -6,6 +6,7 @@ import { Button, Heading, MultiStep, Text, TextInput } from '@ignite-ui/react'
 import { Container, Form, FormError, Header } from './styles'
 import { useEffect } from 'react'
 import { useRouter } from 'next/router'
+import { api } from '@/src/lib/axios'
 
 const registerFormSchema = z.object({
     username: z
@@ -17,7 +18,7 @@ const registerFormSchema = z.object({
     name: z
         .string()
         .min(3, { message: 'Digite no mínimo 3 caracteres' })
-        .regex(/^([a-z]+)$/i, { message: 'Digite apenas letras' }),
+        .regex(/^([a-z\\' ']+)$/i, { message: 'Digite apenas letras' }),
 })
 
 type RegisterFormData = z.infer<typeof registerFormSchema>
@@ -41,7 +42,17 @@ export default function Register() {
     }, [router.query?.username, setValue])
 
     async function handleRegister(data: RegisterFormData) {
-        console.log(data)
+        try {
+
+            await api.post('/users', {
+                name: data.name,
+                username: data.username,
+            })
+
+        } catch (error) {
+            console.log(error)
+
+        }
     }
 
     return (
