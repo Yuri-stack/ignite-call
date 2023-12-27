@@ -35,6 +35,12 @@ export function buildNextAuthOptions(req: NextApiRequest, res: NextApiResponse):
                     return '/register/conect-calendar/?error=permissions'
 
                 return true
+            },
+            async session({ session, user }) {
+                return {
+                    ...session,
+                    user
+                }
             }
         }
     }
