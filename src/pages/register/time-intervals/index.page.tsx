@@ -1,10 +1,12 @@
 import { z } from 'zod'
+import { api } from '@/src/lib/axios';
+import { ArrowRight } from "phosphor-react";
 import { zodResolver } from '@hookform/resolvers/zod';
 import { getWeekDays } from '@/src/utils/get-week-days';
+import { Controller, useFieldArray, useForm } from "react-hook-form";
 import { convertTimeStringToMinutes } from '@/src/utils/convert-time-string-to-minutes';
 import { Button, Checkbox, Heading, MultiStep, Text, TextInput } from "@ignite-ui/react";
-import { Controller, useFieldArray, useForm } from "react-hook-form";
-import { ArrowRight } from "phosphor-react";
+
 import { Container, Header } from "../styles";
 import { FormError, IntervalBox, IntervalContainer, IntervalDay, IntervalInputs, IntervalItem } from "./styles";
 
@@ -72,11 +74,9 @@ export default function TimeIntervals() {
 
     const { fields } = useFieldArray({ name: 'intervals', control })
 
-    async function handleSetTimeIntervals(
-        data: any
-    ) {
-        const formData = data as timeIntervalsFormOutput
-        console.log(data)
+    async function handleSetTimeIntervals(data: any) {
+        const { intervals } = data as timeIntervalsFormOutput
+        await api.post('/users/time-intervals', { intervals })
     }
 
     return (
