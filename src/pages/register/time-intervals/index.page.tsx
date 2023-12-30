@@ -9,6 +9,7 @@ import { Button, Checkbox, Heading, MultiStep, Text, TextInput } from "@ignite-u
 
 import { Container, Header } from "../styles";
 import { FormError, IntervalBox, IntervalContainer, IntervalDay, IntervalInputs, IntervalItem } from "./styles";
+import { useRouter } from 'next/router';
 
 const timeIntervalsFormSchema = z.object({
     intervals: z
@@ -69,6 +70,7 @@ export default function TimeIntervals() {
     })
 
     const weekDays = getWeekDays()
+    const router = useRouter()
 
     const intervals = watch('intervals')
 
@@ -77,6 +79,8 @@ export default function TimeIntervals() {
     async function handleSetTimeIntervals(data: any) {
         const { intervals } = data as timeIntervalsFormOutput
         await api.post('/users/time-intervals', { intervals })
+
+        await router.push(`/register/update-profile`)
     }
 
     return (
