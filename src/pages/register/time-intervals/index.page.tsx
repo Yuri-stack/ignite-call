@@ -1,6 +1,7 @@
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod';
 import { getWeekDays } from '@/src/utils/get-week-days';
+import { convertTimeStringToMinutes } from '@/src/utils/convert-time-string-to-minutes';
 import { Button, Checkbox, Heading, MultiStep, Text, TextInput } from "@ignite-ui/react";
 import { Controller, useFieldArray, useForm } from "react-hook-form";
 import { ArrowRight } from "phosphor-react";
@@ -21,10 +22,26 @@ const timeIntervalsFormSchema = z.object({
         .transform((intervals) => intervals.filter((interval) => interval.enabled))
         .refine((intervals) => intervals.length > 0, {
             message: 'Você precisa selecionar ao menos um dia da semana',
-        }),
+        })
+        .transform(intervals => {
+            return intervals.map(interval => {
+                return {
+                    weekDay: interval.weekDay,
+                    startTimeInMinutes: convertTimeStringToMinutes(interval.startTime),
+                    endTimeInMinutes: convertTimeStringToMinutes(interval.endTime),
+                }
+            })
+        })
+        .refine(intervals => {
+            return intervals.every(
+                interval => interval.endTimeInMinutes - 60 >= interval.startTimeInMinutes)
+        }, {
+            message: 'O horário de término deve ser ao menos 1 hora do início'
+        })
 })
 
-type timeIntervalsFormData = z.infer<typeof timeIntervalsFormSchema>
+type timeIntervalsFormInput = z.input<typeof timeIntervalsFormSchema>
+type timeIntervalsFormOutput = z.output<typeof timeIntervalsFormSchema>
 
 export default function TimeIntervals() {
 
@@ -34,7 +51,7 @@ export default function TimeIntervals() {
         register,
         handleSubmit,
         formState: { isSubmitting, errors }
-    } = useForm({
+    } = useForm<timeIntervalsFormInput, timeIntervalsFormOutput>({
         resolver: zodResolver(timeIntervalsFormSchema),
         defaultValues: {
             intervals: [
@@ -55,8 +72,11 @@ export default function TimeIntervals() {
 
     const { fields } = useFieldArray({ name: 'intervals', control })
 
-    async function handleSetTimeIntervals(data: timeIntervalsFormData) {
-
+    async function handleSetTimeIntervals(
+        data: any
+    ) {
+        const formData = data as timeIntervalsFormOutput
+        console.log(data)
     }
 
     return (
