@@ -3,7 +3,7 @@ import { ConfirmStep } from "./ConfirmStep/Index";
 
 export function ScheduleForm() {
     return (
-        // <CalendarStep />
-        <ConfirmStep />
+        <CalendarStep />
+        // <ConfirmStep />
     )
 }
