@@ -37,6 +37,8 @@ export function CalendarStep() {
         enabled: !!selectedDate
     })
 
+    console.log(availability?.possibleTimes)
+
     return (
         <Container isTimePickerOpen={isDateSelected}>
             <Calendar selectedDate={selectedDate} onDateSelected={setSelectedDate} />
