@@ -29,12 +29,27 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
         return !availableWeekDays.some(availableWeekDay => availableWeekDay.week_day === weekday)
     })
 
-    const blockedDatesRaw = await prisma.$queryRaw`
-        SELECT *
+    const blockedDatesRaw: Array<{ date: number }> = await prisma.$queryRaw`
+        SELECT
+            EXTRACT(DAY FROM S.date) AS date,
+            COUNT(S.date) AS amount,
+            ((UTI.time_end_in_minutes - UTI.time_start_in_minutes) / 60) AS size
+
         FROM tb_schedulings S
+
+        LEFT JOIN tb_users_time_intervals UTI
+            ON UTI.week_day = WEEKDAY(DATE_ADD(S.date, INTERVAL 1 DAY))
+
         WHERE S.user_id = ${user.id}
             AND DATE_FORMAT(S.date, "%Y-%m") = ${`${year}-${month}`}
+
+        GROUP BY EXTRACT(DAY FROM S.date),
+            ((UTI.time_end_in_minutes - UTI.time_start_in_minutes) / 60)
+
+        HAVING amount >= size
     `
 
-    return res.json({ blockedWeekDays, blockedDatesRaw })
+    const blockedDates = blockedDatesRaw.map(item => item.date)
+
+    return res.json({ blockedWeekDays, blockedDates })
 }
