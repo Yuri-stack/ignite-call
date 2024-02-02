@@ -67,7 +67,11 @@ export function ConfirmStep({
 
       <label>
         <Text size="sm">Nome completo</Text>
-        <TextInput crossOrigin="" placeholder="Seu nome" {...register('name')} />
+        <TextInput
+          crossOrigin=""
+          placeholder="Seu nome"
+          {...register('name')}
+        />
         {errors.name && <FormError size="sm">{errors.name.message}</FormError>}
       </label>
 

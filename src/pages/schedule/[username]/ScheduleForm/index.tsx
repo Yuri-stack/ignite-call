@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { CalendarStep } from './CalendarStep/index.page'
+import { CalendarStep } from './CalendarStep'
 import { ConfirmStep } from './ConfirmStep'
 
 export function ScheduleForm() {

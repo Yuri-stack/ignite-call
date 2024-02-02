@@ -92,7 +92,11 @@ export default function Register() {
 
           <label>
             <Text size="sm">Nome Completo</Text>
-            <TextInput crossOrigin="" placeholder="Seu nome" {...register('name')} />
+            <TextInput
+              crossOrigin=""
+              placeholder="Seu nome"
+              {...register('name')}
+            />
 
             {errors.name && (
               <FormError size="sm">{errors.name.message}</FormError>
