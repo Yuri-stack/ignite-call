@@ -141,6 +141,7 @@ export default function TimeIntervals() {
                   </IntervalDay>
                   <IntervalInputs>
                     <TextInput
+                      crossOrigin=""
                       size="sm"
                       type="time"
                       step={60}
@@ -149,6 +150,7 @@ export default function TimeIntervals() {
                     />
 
                     <TextInput
+                      crossOrigin=""
                       size="sm"
                       type="time"
                       step={60}
