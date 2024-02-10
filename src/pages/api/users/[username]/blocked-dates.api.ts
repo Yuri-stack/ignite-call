@@ -61,9 +61,9 @@ export default async function handle(
             COUNT(S.date),
             ((UTI.time_end_in_minutes - UTI.time_start_in_minutes) / 60)
 
-        FROM schedulings S
+        FROM tb_schedulings S
 
-        LEFT JOIN user_time_intervals UTI
+        LEFT JOIN tb_users_time_intervals UTI
             ON UTI.week_day = EXTRACT(DOW FROM S.date + INTERVAL '1 day')
 
         WHERE S.user_id = ${user.id}
